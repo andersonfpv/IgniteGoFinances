@@ -8,21 +8,24 @@ import {
   UserGreeting,
   UserName,
   UserWrapper,
+  Icon,
 } from "./styles";
 
 export function Dashboard(){
     return (
       <Container>
         <Header>
-            <UserWrapper>
-                <UserInfo>
-                    <Photo source={{ uri: "https://github.com/andersonfpv.png" }} />
-                    <User>
-                    <UserGreeting>Olá</UserGreeting>
-                    <UserName>Anderson</UserName>
-                    </User>
-                </UserInfo>
-            </UserWrapper>
+          <UserWrapper>
+            <UserInfo>
+              <Photo source={{ uri: "https://github.com/andersonfpv.png" }} />
+              <User>
+                <UserGreeting>Olá</UserGreeting>
+                <UserName>Anderson</UserName>
+              </User>
+            </UserInfo>
+            <Icon name="power"/>
+
+          </UserWrapper>
         </Header>
       </Container>
     );
