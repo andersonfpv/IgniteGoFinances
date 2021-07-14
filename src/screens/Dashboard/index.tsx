@@ -10,6 +10,7 @@ import {
   UserName,
   UserWrapper,
   Icon,
+  HighlightCards,
 } from "./styles";
 
 export function Dashboard(){
@@ -24,11 +25,15 @@ export function Dashboard(){
                 <UserName>Anderson</UserName>
               </User>
             </UserInfo>
-            <Icon name="power"/>
-
+            <Icon name="power" />
           </UserWrapper>
         </Header>
-        <HighlightCard />
+
+        <HighlightCards>
+          <HighlightCard />
+          <HighlightCard />
+          <HighlightCard />
+        </HighlightCards>
       </Container>
     );
 }
