@@ -51,7 +51,7 @@ export function Register(){
   
   const [category, setCategory] = useState({
     key: 'category',
-    name: 'Categoria'
+    name: 'Categoria',
   });
 
   const navigation = useNavigation();
@@ -102,7 +102,7 @@ export function Register(){
 
       const dataFormatted = [
         ...currentData,
-        newTransaction
+        newTransaction,
       ];
 
       await AsyncStorage.setItem(dataKey, JSON.stringify(dataFormatted));
@@ -111,7 +111,7 @@ export function Register(){
       setTransactionType('');
       setCategory({
         key: 'category',
-        name: 'Categoria'
+        name: 'Categoria',
       });
 
       navigation.navigate('Listagem');
