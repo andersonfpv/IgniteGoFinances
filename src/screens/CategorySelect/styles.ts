@@ -44,3 +44,8 @@ export const Separator = styled.View`
     background-color: ${({ theme }) => theme.colors.text};
 `;
 
+
+export const Footer = styled.View`
+    width: 100%;
+    padding: 24px;
+`;

@@ -1,5 +1,8 @@
 import React from "react";
 import { FlatList } from "react-native-gesture-handler";
+
+import { Button } from "../../components/Form/Button";
+
 import { categories } from "../../utils/categories";
 
 import { 
@@ -9,7 +12,8 @@ import {
     Category,
     Icon,
     Name,
-    Separator, 
+    Separator,
+    Footer, 
 } from "./styles";
 
 interface Category {
@@ -46,6 +50,10 @@ export function CategorySelect({
                 )}
                 ItemSeparatorComponent={() => <Separator />}
             />
+
+            <Footer>
+                <Button title="Selecionar" />
+            </Footer>
         </Container>
     )
 }
