@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { VictoryPie } from 'victory-native';
 import { RFValue } from 'react-native-responsive-fontsize';
+import { addMonths, subMonths, format } from 'date-fns';
+import { ptBR } from 'date-fns/esm/locale';
 
 import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs';
 import { useTheme } from 'styled-components';
@@ -40,17 +42,28 @@ interface CategoryData {
 }
 
 export function Resume(){
-  const [totalByCategories, setTotalByCategories] = useState<CategoryData[]>([]);
+    const [selectedDate, setSelectedDate] = useState(new Date());
+    const [totalByCategories, setTotalByCategories] = useState<CategoryData[]>([]);
 
-  const theme = useTheme();
+    const theme = useTheme();
+    
+    function handleDateChange(action: 'next' | 'prev'){
+        if(action === 'next'){
+            setSelectedDate(addMonths(selectedDate, 1));
+        }else{
+            setSelectedDate(subMonths(selectedDate, 1));
+        }
+    }
 
-  async function loadData() {
+    async function loadData() {
     const dataKey = '@gofinances:transactions';
     const response = await AsyncStorage.getItem(dataKey);
     const responseFormatted = response ? JSON.parse(response) : [];
 
     const expensives = responseFormatted
-    .filter((expensive: TransactionData) => expensive.type === 'negative');
+    .filter((expensive: TransactionData) => expensive.type === 'negative' && 
+    new Date(expensive.date).getMonth() === selectedDate.getMonth() &&
+    new Date(expensive.date).getFullYear() === selectedDate.getFullYear());
 
 
     const expensivesTotal = expensives
@@ -95,10 +108,10 @@ export function Resume(){
 
   useEffect(() => {
     loadData();
-  },[]);
+  }, [selectedDate, totalByCategories]);
 
 
-  return(
+  return (
     <Container>
       <Header>
         <Title>Resumo por categoria</Title>
@@ -111,30 +124,28 @@ export function Resume(){
           paddingBottom: useBottomTabBarHeight(),
         }}
       >
-
         <MonthSelect>
-          <MonthSelectButton>
-            <MonthSelectIcon name="chevron-left"/>
+          <MonthSelectButton onPress={() => handleDateChange("prev")}>
+            <MonthSelectIcon name="chevron-left" />
           </MonthSelectButton>
 
-          <Month>Maio</Month>
+          <Month>{ format(selectedDate, 'MMMM, yyyy', {locale: ptBR}) }</Month>
 
-          <MonthSelectButton>
-            <MonthSelectIcon name="chevron-right"/>
+          <MonthSelectButton onPress={() => handleDateChange("next")}>
+            <MonthSelectIcon name="chevron-right" />
           </MonthSelectButton>
         </MonthSelect>
-
 
         <ChartContainer>
           <VictoryPie
             data={totalByCategories}
-            colorScale={totalByCategories.map(category => category.color)}
+            colorScale={totalByCategories.map((category) => category.color)}
             style={{
               labels: {
                 fontSize: RFValue(18),
-                fontWeight: 'bold',
-                fill: theme.colors.shape
-              }
+                fontWeight: "bold",
+                fill: theme.colors.shape,
+              },
             }}
             labelRadius={50}
             x="percent"
@@ -142,18 +153,15 @@ export function Resume(){
           />
         </ChartContainer>
 
-        {
-          totalByCategories.map(item => (
-            <HistoryCard
-              key={item.key}
-              title={item.name}
-              amount={item.totalFormatted}
-              color={item.color}
-            />
-          ))
-        }
+        {totalByCategories.map((item) => (
+          <HistoryCard
+            key={item.key}
+            title={item.name}
+            amount={item.totalFormatted}
+            color={item.color}
+          />
+        ))}
       </Content>
-
     </Container>
-  )
+  );
 }
