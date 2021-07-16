@@ -42,7 +42,7 @@ const schema = Yup.object().shape({
   .number()
   .typeError('Informe um valor númerico')
   .positive('O valor não pode ser negativo')
-  .required('O valor é obrigatório'),
+  // .required('O valor é obrigatório'),
 });
 
 export function Register(){
@@ -107,9 +107,9 @@ export function Register(){
 
       await AsyncStorage.setItem(dataKey, JSON.stringify(dataFormatted));
 
-      reset();
-      setTransactionType('');
-      setCategory({
+        reset();
+        setTransactionType('');
+        setCategory({
         key: 'category',
         name: 'Categoria',
       });
@@ -117,8 +117,8 @@ export function Register(){
       navigation.navigate('Listagem');
       
     } catch (error) {
-      console.log(error);
-      Alert.alert("Não foi possível salvar");
+        console.log(error);
+        Alert.alert("Não foi possível salvar");
     }
   }
 

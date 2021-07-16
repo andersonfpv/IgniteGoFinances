@@ -1,10 +1,10 @@
-import React from "react";
+import React from 'react';
 import { 
     Container,
     Icon,
     Title, 
     Button,
-} from "./styles";
+} from './styles';
 import { RectButtonProps } from 'react-native-gesture-handler';
 
 const icons = {

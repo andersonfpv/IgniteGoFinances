@@ -19,5 +19,5 @@ export function Button({
                 { title }
             </Title>
         </Container>
-    )
+    );
 }

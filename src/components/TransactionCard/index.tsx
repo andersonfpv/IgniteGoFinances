@@ -49,6 +49,6 @@ export function TransactionCard({ data } : Props){
         <Date>{data.date}</Date>
       </Footer>
     </Container>
-  );
+  )
       
 }

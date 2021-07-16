@@ -9,7 +9,7 @@ import { HighlightCard } from '../../components/HighlightCard';
 import {
   TransactionCard,
   TransactionCardProps,
-} from "../../components/TransactionCard";
+} from '../../components/TransactionCard';
 import {
   Container,
   Header,
@@ -25,8 +25,8 @@ import {
   Title,
   TransactionList,
   LogoutButton,
-  LoadingContainer,
-} from "./styles";
+  LoadContainer,
+} from './styles';
 
 export interface DataListProps extends TransactionCardProps {
   id: string;
@@ -57,12 +57,11 @@ export function Dashboard(){
     ){
     const lastTransaction = new Date(
       Math.max.apply(Math, collection
-        .filter(transaction => transaction.type === type)
-        .map(transaction => new Date(transaction.date).getTime())
-      ));
+      .filter(transaction => transaction.type === type)
+      .map(transaction => new Date(transaction.date).getTime())))
 
-    return `${lastTransaction.getDate()} de ${lastTransaction.toLocaleString('pt-BR', { month: 'long'})}`;
-  }
+      return `${lastTransaction.getDate()} de ${lastTransaction.toLocaleString('pt-BR', { month: 'long'})}`;
+    }
 
   async function loadTransactions(){
     const dataKey = '@gofinances: transactions';
@@ -115,21 +114,21 @@ export function Dashboard(){
       entries: {
         amount: entriesTotal.toLocaleString("pt-BR", {
           style: "currency",
-          currency: "BRL",
+          currency: "BRL"
         }),
         lastTransaction: `Última entrada dia ${lastTransactionEntries}`,
       },
       expensives: {
         amount: expensiveTotal.toLocaleString("pt-BR", {
           style: "currency",
-          currency: "BRL",
+          currency: "BRL"
         }),
         lastTransaction: `Última saída dia ${lastTransactionExpensives}`,
       },
       total: {
         amount: total.toLocaleString("pt-BR", {
           style: "currency",
-          currency: "BRL",
+          currency: "BRL"
         }),
         lastTransaction: totalInterval,
       },
@@ -140,7 +139,7 @@ export function Dashboard(){
 
   useEffect(() => {
     loadTransactions();
-  }, []);
+  },[]);
 
   useFocusEffect(useCallback(() => {
     loadTransactions();
@@ -150,12 +149,12 @@ export function Dashboard(){
     <Container>
       {
         isLoading ? 
-          <LoadingContainer> 
+          <LoadContainer> 
             <ActivityIndicator 
               color={theme.colors.primary}
               size="large"
             /> 
-          </LoadingContainer> : 
+          </LoadContainer> : 
         <>  
           <Header>
             <UserWrapper>
@@ -167,7 +166,7 @@ export function Dashboard(){
                 </User>
               </UserInfo>
               <LogoutButton onPress={() => {}}>
-              <Icon on name="power" />
+              <Icon name="power" />
               </LogoutButton>
             </UserWrapper>
           </Header>
@@ -195,6 +194,7 @@ export function Dashboard(){
 
           <Transactions>
             <Title>Listagem</Title>
+            
             <TransactionList 
               data={transactions}
               keyExtractor={item => item.id}

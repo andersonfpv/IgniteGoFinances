@@ -97,9 +97,8 @@ export const TransactionList = styled(
   }
 })``;
 
-export const LoadingContainer = styled.View`
+export const LoadContainer = styled.View`
   flex: 1;
   justify-content: center;
   align-items: center;
-
 `;
