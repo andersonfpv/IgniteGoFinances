@@ -45,15 +45,13 @@ interface CategoryData {
 }
 
 export function Resume(){
-    const [isLoading, setIsLoading] = useState(true);
+    const [isLoading, setIsLoading] = useState(false);
     const [selectedDate, setSelectedDate] = useState(new Date());
     const [totalByCategories, setTotalByCategories] = useState<CategoryData[]>([]);
 
     const theme = useTheme();
     
     function handleDateChange(action: 'next' | 'prev'){
-        setIsLoading(true);
-
         if(action === 'next'){
             setSelectedDate(addMonths(selectedDate, 1));
         }else{
@@ -62,30 +60,31 @@ export function Resume(){
     }
 
     async function loadData() {
-    const dataKey = '@gofinances:transactions';
-    const response = await AsyncStorage.getItem(dataKey);
-    const responseFormatted = response ? JSON.parse(response) : [];
+      setIsLoading(true);
+      const dataKey = '@gofinances:transactions';
+      const response = await AsyncStorage.getItem(dataKey);
+      const responseFormatted = response ? JSON.parse(response) : [];
 
-    const expensives = responseFormatted
-    .filter((expensive: TransactionData) => expensive.type === 'negative' && 
-    new Date(expensive.date).getMonth() === selectedDate.getMonth() &&
-    new Date(expensive.date).getFullYear() === selectedDate.getFullYear());
+      const expensives = responseFormatted
+      .filter((expensive: TransactionData) => expensive.type === 'negative' && 
+      new Date(expensive.date).getMonth() === selectedDate.getMonth() &&
+      new Date(expensive.date).getFullYear() === selectedDate.getFullYear());
 
 
-    const expensivesTotal = expensives
-    .reduce((acumullator: number, expensive: TransactionData) => {
-      return acumullator + Number(expensive.amount);
-    }, 0);
+      const expensivesTotal = expensives
+      .reduce((acumullator: number, expensive: TransactionData) => {
+        return acumullator + Number(expensive.amount);
+      }, 0);
     
-    const totalByCategory: CategoryData[] = [];
+      const totalByCategory: CategoryData[] = [];
 
-    categories.forEach(category => {
-      let categorySum = 0;
+      categories.forEach(category => {
+        let categorySum = 0;
 
-      expensives.forEach((expensive: TransactionData) => {
-        if(expensive.category === category.key){
-          categorySum += Number(expensive.amount);
-        }
+        expensives.forEach((expensive: TransactionData) => {
+          if(expensive.category === category.key){
+            categorySum += Number(expensive.amount);
+          }
       });
 
       if(categorySum > 0){
@@ -113,13 +112,11 @@ export function Resume(){
     setIsLoading(false);
   }
 
-  useEffect(() => {
-    loadData();
-  },[selectedDate]);
-
-  useFocusEffect(useCallback(() => {
-    loadData();
-  },[]));
+  useFocusEffect(
+    useCallback(() => {
+      loadData();
+    }, [selectedDate])
+  );
 
 
   return (
