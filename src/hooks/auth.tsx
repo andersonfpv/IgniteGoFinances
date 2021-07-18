@@ -2,7 +2,8 @@ import React, {
     createContext,
     ReactNode,
     useContext,
-    useState 
+    useState,
+    useEffect 
 } from 'react';
 
 const { CLIENT_ID } = process.env;
@@ -41,6 +42,9 @@ const AuthContext = createContext({} as IAuthContextData);
 
 function AuthProvider({ children }: AuthProviderProps) {
     const [user, setUser] = useState<User>({} as User);
+    const [userStorageLoading, setuserStorageLoading] = useState(true);
+
+    const userStorageKey = '@gofinances:user';
 
     async function signInWithGoogle() {
         try {
@@ -90,13 +94,28 @@ function AuthProvider({ children }: AuthProviderProps) {
                 };
 
                 setUser(userLogged);
-                await AsyncStorage.setItem('@gofinances:user', JSON.stringify(userLogged));
+                await AsyncStorage.setItem(userStorageKey, JSON.stringify(userLogged));
             }
 
         }catch (error) {
             throw new Error(error);
         }
     }
+
+    useEffect(() => {
+        async function loadUserStorageDate(){
+            const userStoraged = await AsyncStorage.getItem(userStorageKey);
+
+            if (userStoraged) {
+              const userLogged = JSON.parse(userStoraged) as User;
+              setUser(userLogged);
+            }
+
+            setuserStorageLoading(false);
+        }
+        
+        loadUserStorageDate();
+    },[]);
 
     return (
       <AuthContext.Provider
