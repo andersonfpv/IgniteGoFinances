@@ -4,6 +4,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import { useFocusEffect } from '@react-navigation/native';
 import { useTheme } from 'styled-components';
+import { useAuth } from '../../hooks/auth';
 
 import { HighlightCard } from '../../components/HighlightCard';
 import { TransactionCard, TransactionCardProps } from '../../components/TransactionCard';
@@ -26,6 +27,7 @@ import {
   LoadContainer
 } from './styles'
 
+
 export interface DataListProps extends TransactionCardProps {
   id: string;
 }
@@ -47,6 +49,7 @@ export function Dashboard(){
   const [highlightData, setHighlightData] = useState<HighlightData>({} as HighlightData);
 
   const theme = useTheme();
+  const { signOut, user } = useAuth();
 
   function getLastTransactionDate(
     collection: DataListProps[],
@@ -147,24 +150,23 @@ export function Dashboard(){
 
   return (
     <Container>
-      {isLoading ? 
+      {isLoading ? (
         <LoadContainer>
           <ActivityIndicator color={theme.colors.primary} size="large" />
-        </LoadContainer> : 
+        </LoadContainer>
+      ) : (
         <>
           <Header>
             <UserWrapper>
               <UserInfo>
-                <Photo
-                  source={{ uri: 'https://github.com/andersonfpv.png' }}
-                />
+                <Photo source={{ uri: user.photo }} />
                 <User>
                   <UserGreeting>Olá,</UserGreeting>
-                  <UserName>Anderson</UserName>
+                  <UserName>{user.name}</UserName>
                 </User>
               </UserInfo>
 
-              <LogoutButton onPress={() => {}}>
+              <LogoutButton onPress={signOut}>
                 <Icon name="power" />
               </LogoutButton>
             </UserWrapper>
@@ -201,7 +203,7 @@ export function Dashboard(){
             />
           </Transactions>
         </>
-      }
+      )}
     </Container>
   );
 }
